@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
 from transformers import MarianMTModel, MarianTokenizer
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)  # This enables CORS for all routes
 
 # Load models for Hindi to English and English to Hindi translation
 model_hi_en = MarianMTModel.from_pretrained("Helsinki-NLP/opus-mt-hi-en")
@@ -10,6 +12,10 @@ tokenizer_hi_en = MarianTokenizer.from_pretrained("Helsinki-NLP/opus-mt-hi-en")
 model_en_hi = MarianMTModel.from_pretrained("Helsinki-NLP/opus-mt-en-hi")
 tokenizer_en_hi = MarianTokenizer.from_pretrained("Helsinki-NLP/opus-mt-en-hi")
 
+
+@app.route('/', methods=['GET'])
+def baseRoute():
+    return jsonify({'status': 'ok'}), 200   
 
 @app.route('/translate', methods=['POST'])
 def translate():
